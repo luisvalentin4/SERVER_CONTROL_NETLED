@@ -24,7 +24,7 @@ public class NLServer {
     {
         int port = 81;
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
-        System.out.println("server started at " + port);
+        System.out.println("server started at... " + port);
         server.createContext("/", new RootHandler());
         server.createContext("/echoHeader", new EchoHeaderHandler());
         server.createContext("/echoGet", new EchoGetHandler());
