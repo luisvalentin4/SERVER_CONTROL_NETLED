@@ -76,14 +76,38 @@ public class Concentradora implements HttpHandler {
         imprime("Enciendo la tarjeta: "+tarjeta);
     }
     
-    public void turnOnActuador(String tarjeta)
-    {
+    public void turnOnLedColor(String tarjeta, String color){
+    
+        // Esté metodo es para mandar el comando de encender en un color especifico
         byte[] buffer={0x00,0x00,0x34};
         sp = SerialPort.getCommPort("com3");
         sp.openPort();
         sp.writeBytes(buffer, buffer.length);
         sp.closePort();
         imprime("Enciendo la tarjeta: "+tarjeta);
+        
+    }
+    
+    public void turnOnActuador(String tarjeta)
+    {
+        // este metodo es para encender un actuador
+        byte[] buffer={0x00,0x00,0x34};
+        sp = SerialPort.getCommPort("com3");
+        sp.openPort();
+        sp.writeBytes(buffer, buffer.length);
+        sp.closePort();
+        imprime("Enciendo la tarjeta: "+tarjeta);
+    }
+    
+    public void sendComand(String comando)
+    {        
+        //este metodo es para enviar el comando a la tarjeta concentradora
+        byte[] buffer={0x00,0x00,0x34};
+        sp = SerialPort.getCommPort("com3");
+        sp.openPort();
+        sp.writeBytes(buffer, buffer.length);
+        sp.closePort();
+        imprime("envio comando: "+comando);        
     }
     
 }
