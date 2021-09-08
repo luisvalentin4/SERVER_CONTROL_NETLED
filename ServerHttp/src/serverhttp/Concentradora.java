@@ -65,6 +65,11 @@ public class Concentradora implements HttpHandler {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public void turnOffActuador(String tarjeta)
+    {
+        
+    }
+    
     public void turnOnActuador(String tarjeta)
     {
         byte[] buffer={0x00,0x00,0x34};
