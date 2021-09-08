@@ -67,7 +67,7 @@ public class Concentradora implements HttpHandler {
     
     public void turnOffActuador(String tarjeta)
     {
-        
+        // Esté metodo es para mandar el comando de apagar
     }
     
     public void turnOnActuador(String tarjeta)
