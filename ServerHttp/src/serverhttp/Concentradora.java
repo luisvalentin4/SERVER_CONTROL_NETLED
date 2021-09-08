@@ -68,6 +68,12 @@ public class Concentradora implements HttpHandler {
     public void turnOffActuador(String tarjeta)
     {
         // Esté metodo es para mandar el comando de apagar
+        byte[] buffer={0x00,0x00,0x34};
+        sp = SerialPort.getCommPort("com3");
+        sp.openPort();
+        sp.writeBytes(buffer, buffer.length);
+        sp.closePort();
+        imprime("Enciendo la tarjeta: "+tarjeta);
     }
     
     public void turnOnActuador(String tarjeta)
