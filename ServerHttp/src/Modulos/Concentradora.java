@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.net.URI;
 import com.fazecast.jSerialComm.*;
+import java.io.OutputStream;
 
 /**
  *
@@ -89,6 +90,7 @@ public class Concentradora implements HttpHandler {
                 DEBEMOS ENVIAR UN RESPONSE A LA APP CLIENTE
                 PUEDE SER UN SIMPLE "OK"
                 */
+                Response(he);
                 
             }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -139,5 +141,13 @@ public class Concentradora implements HttpHandler {
         sp.writeBytes(buffer, buffer.length);
         sp.closePort();
         imprime("envio comando: "+comando);        
-    }    
+    } 
+    
+    public void Response(HttpExchange he) throws IOException{
+            String response = "{ \"ok\":  \"true\", \"message\": \"Accion exitosa\" }";
+            he.sendResponseHeaders(200, response.length());
+            OutputStream os = he.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+    }
 }
