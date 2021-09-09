@@ -69,7 +69,19 @@ public class Concentradora implements HttpHandler {
                 //switch(metodo)
                 //if
                 //O ALGUN OTRO TIPO DE FLUJO DE OCNTROL 
-                turnOnActuador(argumentos);          
+                 switch(requestedMethod){
+                    case "turnOnActuador":
+                        turnOnActuador(argumentos);  
+                    break;
+                    case "turnOffActuador":
+                        turnOffActuador(argumentos); 
+                    break;
+                    case "turnOnLedColor":
+                    break;
+                    default:
+                        imprime("Acción no existe");
+                    break;
+                }       
                 
                 
                 /*
