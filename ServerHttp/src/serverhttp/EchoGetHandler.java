@@ -32,11 +32,13 @@ public class EchoGetHandler implements HttpHandler{
                  parseQuery(query, parameters);
 
                  // send response
-                 String response = "";
+                 String response = "ok";
                  for (String key : parameters.keySet())
                           response += key + " = " + parameters.get(key) + "n";
                  he.sendResponseHeaders(200, response.length());
                 try (OutputStream os = he.getResponseBody()) {
+                    String res = response.toString();
+                    System.out.println(res);
                     os.write(response.toString().getBytes());
                 }
          }

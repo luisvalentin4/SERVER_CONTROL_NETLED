@@ -5,6 +5,7 @@
  */
 package serverhttp;
 
+import Modulos.Concentradora;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -29,7 +30,16 @@ public class NLServer {
         server.createContext("/echoHeader", new EchoHeaderHandler());
         server.createContext("/echoGet", new EchoGetHandler());
         server.createContext("/echoPost", new EchoPostHandler());
-        server.createContext("/concentradora", new Concentradora());// creado por mi manda llamar una clase y ejecuta el metdo handler
+        /*
+        *
+        *
+        AQUI PODEMOS CREAR UNA LISTA DE MODULOS DE LOS DISPOSITIVOS QUE QUERAMOS CONTROLAR
+        POR EJEMPLO DISPOSITIVOS SPEAKERCRAFT
+        ****** server.createContex("/speackercraft", new Concentradora());// PRIMERAMENTE DEBERA ESTAR CREADO EL MODULO (CLASE)
+        *
+        *       
+        */
+        server.createContext("/concentradora", new Concentradora());// creado por mi manda llamar una clase y ejecuta el metdo handler        
         server.setExecutor(null);
         server.start();           
     }       
