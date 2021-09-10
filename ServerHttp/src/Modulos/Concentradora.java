@@ -84,7 +84,7 @@ public class Concentradora implements HttpHandler {
                     break;
                 }       
                 
-                
+              
                 /*
                 DESPUES DE RECIBIR Y PROCESAR EL REQUEST
                 DEBEMOS ENVIAR UN RESPONSE A LA APP CLIENTE
@@ -119,6 +119,9 @@ public class Concentradora implements HttpHandler {
         sp.writeBytes(buffer, buffer.length);
         sp.closePort();
         imprime("Enciendo la tarjeta: "+tarjeta);
+        // busco el nombre de la tarjeta para encontrar su comando
+        String comando = LecturaFichero.buscarCodigo(tarjeta);
+        System.out.println("Su comando es : " + comando);
     }
     
     public void turnOnLedColor(String tarjeta, String color){
