@@ -24,7 +24,7 @@ public class Concentradora implements HttpHandler {
     public void imprime(String url){System.out.println("Log->>> "+url);}
 
     @Override
-    public void handle(HttpExchange he) throws IOException 
+    public void handle(HttpExchange he) throws IOException //METODO HANDLER
     {        
         String URL = he.getRequestURI().getPath();        
         String[] url = URL.split("/");        
