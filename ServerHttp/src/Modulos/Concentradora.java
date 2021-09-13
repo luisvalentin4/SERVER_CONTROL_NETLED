@@ -12,6 +12,7 @@ import java.net.URI;
 import com.fazecast.jSerialComm.*;
 import java.io.OutputStream;
 
+
 /**
  *
  * @author PLACOFF2015
@@ -92,6 +93,9 @@ public class Concentradora implements HttpHandler {
                 */
                 Response(he);
                 
+                // buscar los puesrtos disponibles 
+                PruebasSerialPort();
+                
             }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -152,5 +156,14 @@ public class Concentradora implements HttpHandler {
             OutputStream os = he.getResponseBody();
             os.write(response.getBytes());
             os.close();
+    }
+    
+    
+    public void PruebasSerialPort(){
+        SerialPort[] ports = SerialPort.getCommPorts();
+        System.out.println("Select a port:");
+		int i = 1;
+		for(SerialPort port : ports)
+			System.out.println(i++ +  ": " + port.getSystemPortName());
     }
 }
