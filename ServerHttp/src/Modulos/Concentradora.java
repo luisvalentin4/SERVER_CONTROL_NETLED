@@ -22,6 +22,7 @@ public class Concentradora implements HttpHandler {
     SerialPort sp;
     String requestedMethod = null;	// Almacena el nombre del metodo solicitado
     String argumentos = null;	// Almacena los argumentos que utilizara el metodo
+    String response = null;
     
     public void imprime(String url){System.out.println("Log->>> "+url);}
 
@@ -49,6 +50,14 @@ public class Concentradora implements HttpHandler {
                 argumentos = argumentos.substring(0, finURL); // ahora si ya en argumentos obtengo solo lo que hay dentro de los parentesis
                 imprime("argumentos: "+argumentos);
                 
+                String[] argv = null;
+                int argc = 0;
+                
+                if (argumentos != ""){
+                    argv = argumentos.split(",");
+                    argc = argv.length;
+                }
+                
                 /*
                 *
                 *ESTE FRAGMENTO DE CODIGO LO USAREMOS PARA CUANDO NECESITEMOS MANDAR 2 O MAS PARAMETROS 
@@ -57,7 +66,8 @@ public class Concentradora implements HttpHandler {
 				
 		int argc = 0;	// Contiene el numero de argumentos
 
-                if (argumentos != "") // preguntamos si argumentos tiene algo
+                if (argumentos != "")
+                // preguntamos si argumentos tiene algo
                 {
                     argv = argumentos.split(","); // con el split separamos los argumentos por comas
                     imprime("arg0: "+argv[0]+" arg1: "+argv[1]); //imprimimos los valores de cada argumento
@@ -73,12 +83,13 @@ public class Concentradora implements HttpHandler {
                 //O ALGUN OTRO TIPO DE FLUJO DE OCNTROL 
                  switch(requestedMethod){
                     case "turnOnActuador":
-                        turnOnActuador(argumentos);  
+                        turnOnActuador(argumentos,he);  
                     break;
                     case "turnOffActuador":
-                        turnOffActuador(argumentos); 
+                        turnOffActuador(argumentos,he); 
                     break;
                     case "turnOnLedColor":
+                        turnOnLedColor(argv[0],argv[1],he);
                     break;
                     default:
                         imprime("Acción no existe");
@@ -91,7 +102,7 @@ public class Concentradora implements HttpHandler {
                 DEBEMOS ENVIAR UN RESPONSE A LA APP CLIENTE
                 PUEDE SER UN SIMPLE "OK"
                 */
-                Response(he);
+                //Response(he);
                 
                 // buscar los puesrtos disponibles 
                 PruebasSerialPort();
@@ -100,44 +111,109 @@ public class Concentradora implements HttpHandler {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void turnOnActuador(String tarjeta)
+    public void turnOnActuador(String tarjeta,HttpExchange he) throws IOException
     {
         // este metodo es para encender un actuador
         // pero primero hay que ir al diccionario o a un archivo
         // a consultar el valor del nombre de la tarjeta proporcionada
         // para concatenarlo al string y completar el comando
+        // buscar el comando por nombre de la tarjeta
+        String[] comando = LecturaFichero.buscarCodigo(tarjeta);
+        System.out.println("Su nombre es : " + comando[0]);
+        System.out.println("Su numero es : " + comando[1]);
+        System.out.println("Su area es : " + comando[2]);
+        
         byte[] buffer={0x00,0x00,0x34};
         sp = SerialPort.getCommPort("com3");
-        sp.openPort();
-        sp.writeBytes(buffer, buffer.length);
-        sp.closePort();
-        imprime("Enciendo la tarjeta: "+tarjeta);
+        if(sp == null){
+            response = "{ \"RESPONSE\":  { \"respuestaServidor\": \"error\", \"msj\": \"error al seleccionar puerto\"} }";
+            he.sendResponseHeaders(200, response.length());
+            OutputStream os = he.getResponseBody();
+            os.write(response.getBytes());
+            os.close();  
+        }else{
+                sp.openPort();
+                sp.writeBytes(buffer, buffer.length);
+                sp.closePort();
+                imprime("Enciendo la tarjeta: "+tarjeta);
+                
+                response = "{ \"RESPONSE\":  { \"respuestaServidor\": \"ok\" } }";
+                he.sendResponseHeaders(200, response.length());
+                OutputStream os = he.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+                 
+        }
+       
     }
     
-    public void turnOffActuador(String tarjeta)
+    public void turnOffActuador(String tarjeta,HttpExchange he)throws IOException
     {
+        // buscar el comando por nombre de la tarjeta
+        String[] comando = LecturaFichero.buscarCodigo(tarjeta);
+        System.out.println("Su nombre es : " + comando[0]);
+        System.out.println("Su numero es : " + comando[1]);
+        System.out.println("Su area es : " + comando[2]);
+        
         // Esté metodo es para mandar el comando de apagar
         byte[] buffer={0x00,0x00,0x34};
         sp = SerialPort.getCommPort("com3");
-        sp.openPort();
-        sp.writeBytes(buffer, buffer.length);
-        sp.closePort();
-        imprime("Enciendo la tarjeta: "+tarjeta);
         // busco el nombre de la tarjeta para encontrar su comando
-        String comando = LecturaFichero.buscarCodigo(tarjeta);
-        System.out.println("Su comando es : " + comando);
+        if(sp == null){
+            response = "{ \"RESPONSE\":  { \"respuestaServidor\": \"error\", \"msj\": \"error al seleccionar puerto\"} }";
+            he.sendResponseHeaders(200, response.length());
+            OutputStream os = he.getResponseBody();
+            os.write(response.getBytes());
+            os.close();  
+        }else{
+                sp.openPort();
+                sp.writeBytes(buffer, buffer.length);
+                sp.closePort();
+                imprime("Enciendo la tarjeta: "+tarjeta);
+                
+                // respuesta para cuando si se envio el comando
+                response = "{ \"RESPONSE\":  { \"respuestaServidor\": \"ok\" } }";
+                he.sendResponseHeaders(200, response.length());
+                OutputStream os = he.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+                 
+        }
+       
     }
     
-    public void turnOnLedColor(String tarjeta, String color){
+    public void turnOnLedColor(String tarjeta, String color,HttpExchange he)throws IOException{
     
         // Esté metodo es para mandar el comando de encender en un color especifico
+        // buscar el comando por nombre de la tarjeta
+        String[] comando = LecturaFichero.buscarCodigo(tarjeta);
+        System.out.println("Su nombre es : " + comando[0]);
+        System.out.println("Su numero es : " + comando[1]);
+        System.out.println("Su area es : " + comando[2]);
+        
         byte[] buffer={0x00,0x00,0x34};
         sp = SerialPort.getCommPort("com3");
         sp.openPort();
         sp.writeBytes(buffer, buffer.length);
         sp.closePort();
-        imprime("Enciendo la tarjeta: "+tarjeta);        
+        imprime("Enciendo la tarjeta: "+tarjeta);   
+        
+        // respuesta para cuando si se envio el comando
+        response = "{ \"RESPONSE\":  { \"respuestaServidor\": \"ok\" } }";
+        he.sendResponseHeaders(200, response.length());
+        OutputStream os = he.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
     }   
+    
+    public void cambiarColorRGB(String tarjeta,String color){
+        // buscar el comando por nombre de la tarjeta
+        String[] comando = LecturaFichero.buscarCodigo(tarjeta);
+        System.out.println("Su nombre es : " + comando[0]);
+        System.out.println("Su numero es : " + comando[1]);
+        System.out.println("Su area es : " + comando[2]);
+        
+    }
     
     public void sendComand(String comando)
     {        
@@ -151,7 +227,8 @@ public class Concentradora implements HttpHandler {
     } 
     
     public void Response(HttpExchange he) throws IOException{
-            String response = "{ \"ok\":  \"true\", \"message\": \"Accion exitosa\" }";
+            //String response = "{ \"ok\":  \"true\", \"message\": \"Accion exitosa\" }";
+            response = "{ \"RESPONSE\":  { \"respuestaServidor\": \"ok\" } }";
             he.sendResponseHeaders(200, response.length());
             OutputStream os = he.getResponseBody();
             os.write(response.getBytes());

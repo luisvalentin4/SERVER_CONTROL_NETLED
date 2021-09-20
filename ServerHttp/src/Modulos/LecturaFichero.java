@@ -15,11 +15,11 @@ import java.util.ArrayList;
 public class LecturaFichero {
     
     // metodo statico para buscar el fiechero
-    public static String buscarCodigo(String buscar){
+    public static String[] buscarCodigo(String buscar){
         ArrayList<String> nombres = new ArrayList<String>();
-        File fichero = new File("DB.txt");
+        File fichero = new File("C:/NetBeansProjects/ServerHTTP/src/Modulos/DB.txt");
         Scanner s = null;
-        String codigoTarjeta = "";
+        String valoresTarjeta[] = null;
         
         try{
             // Leemos el contenido del fichero
@@ -37,7 +37,7 @@ public class LecturaFichero {
                 String[] tarjeta = nombres.get(i).split(":");
                 if(tarjeta[0].equals(buscar)){
                     System.out.println(tarjeta[1]);
-                    codigoTarjeta = tarjeta[1];
+                    valoresTarjeta = tarjeta[1].split(","); 
                 }
             }
 
@@ -54,6 +54,6 @@ public class LecturaFichero {
 				System.out.println("Mensaje 2: " + ex2.getMessage());
 			}
         }
-        return codigoTarjeta;
+        return valoresTarjeta;
     }
 }
